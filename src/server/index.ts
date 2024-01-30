@@ -6,6 +6,8 @@ import morgan from 'morgan'
 
 import { userRoute } from './routes/userRouter'
 
+import errorHandlers from './helpers/errorHandlers'
+
 dotenv.config()
 
 const app: Express = express()
@@ -17,6 +19,8 @@ app.use(cors({
 }))
 
 app.use('/api', userRoute)
+
+app.use(errorHandlers)
 
 app.listen(process.env.PORT, () => {
     console.log(`Server started on port ${process.env.PORT}`)

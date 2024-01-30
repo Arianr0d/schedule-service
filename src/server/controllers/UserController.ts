@@ -3,25 +3,44 @@ import { Request, Response } from "express"
 
 import jwt from "jsonwebtoken"
 
-export async function login(req: Request, res: Response) {
-    const login = 'test' //req.body.login
-    const password = 'test' //req.body.password
+import config from '../tsconfige.json'
 
-    const result = await db.query(
+export async function login(req: Request, res: Response) {
+    const login = req.body.login
+    const password = req.body.password
+
+    const requestIdUser = await db.query(
         `
-            SELECT * FROM "UserSchedule"
-                WHERE "UserSchedule".login = $1 AND "UserSchedule".password = $2
-        `, 
+            SELECT id as userId FROM "UserSchedule"
+	            WHERE login = $1 AND password = $2
+        `,
         [login, password]
     )
 
-    const user = result.rows[0]
+    try {
+        const userId = requestIdUser.rows[0].userid
 
-    const privateKey = '5add5342-5d20-451c-8952-960fec45e268'
-    const token = jwt.sign({ id: user.id }, privateKey, { algorithm: 'HS256' })
+        const { privateKey } = config
+        const token = jwt.sign({ id: userId }, privateKey, { algorithm: 'HS256' })
 
-    res.send({
-        token,
-        id: user.id,
-    })
+        const userInfo = await db.query(
+            `
+                SELECT
+                    teacherid AS "teacherId",
+                    fullnameteacher AS "fullNameTeacher",
+                    chairname AS "chairName",
+	                facultycode AS "facultyCode"
+                FROM "UserInfo"($1)
+            `, 
+            [userId]
+        )
+
+        res.send({
+            token,
+            id: userId,
+            userInfo: userInfo.rows[0],
+        })
+    } catch (err) {
+        throw 'Invalid login or password'
+    }
 }

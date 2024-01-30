@@ -60,16 +60,16 @@ const router = createRouter({
     routes
 })
 
-router.beforeEach(async (to) => {
+/*router.beforeEach(async (to) => {
     const loginPages = ['/login']
     const authRequired = !loginPages.includes(to.path)
     const auth = useUserStore()
 
-    /*if (authRequired && !auth.login()) {
+    if (authRequired && !auth.login()) {
         auth.returnUrl = to.fullPath
         return '/login'
-    }*/
-})
+    }
+})*/
 
 const app = createApp({
     setup () {

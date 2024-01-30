@@ -37,6 +37,7 @@
         />
 
         <v-btn
+            :active="!loading"
             class="mb-8 mt-8"
             color="blue"
             size="large"
@@ -50,13 +51,18 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import {
+    reactive,
+    ref,
+} from 'vue'
 
 import login from '../api/login'
 
 import { useUserStore } from '../stores/user'
 
 const store = useUserStore()
+
+const loading = ref(false)
 
 const form = reactive({
     login: '',
@@ -65,9 +71,16 @@ const form = reactive({
 })
 
 const onSubmit = async () => {
-    console.log(form)
-    const { id, token } = await login('http://localhost:8081/api', form.login, form.password)
-    store.set(id, token)
+    try {
+        loading.value = true
+
+        const { id, token, userInfo } = await login('http://localhost:8081/api', form.login, form.password)
+        store.set(id, token, userInfo )
+    } catch (err) {
+        console.log(err)
+    } finally {
+        loading.value = false
+    }
 }
 </script>
 
