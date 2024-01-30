@@ -15,39 +15,16 @@ import {
 
 import vuetifyPlugin from './plugins/vuetify'
 
-import { useUserStore } from './stores/user'
-
 import AuthorizationPage from './pages/AuthorizationPage.vue'
+import HomePage from './pages/HomePage.vue'
 
 const pinia = createPinia()
 const vuetify = vuetifyPlugin
 
-const Home = defineComponent({
-    setup () {
-        return () => [
-            h('h1', 'Home!'),
-            h(RouterLink, {
-                to: '/about'
-            }, () => 'About')
-        ]
-    }
-})
-
-const About = defineComponent({
-    setup () {
-        return () => [
-            h('h1', 'About!'),
-            h(RouterLink, {
-                to: '/'
-            }, () => 'Home')
-        ]
-    }
-})
-
 const routes = [
     {
         path: '/',
-        component: Home
+        component: HomePage
     },
     {
         path: '/login',

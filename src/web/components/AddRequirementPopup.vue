@@ -10,101 +10,95 @@
             </template>
         
             <v-card>
-        
-            <v-card-title class="text-h5">
-                Требования к дисциплине
+                <v-card-title class="text-h5">
+                    Требования к дисциплине
 
-                <span class="requirement-dialog__label">
-                    {{ requirement.disciplineName }}
-                </span>
-            </v-card-title>
+                    <span class="requirement-dialog__label">
+                        {{ requirement.disciplineName }}
+                    </span>
+                </v-card-title>
 
-            <v-select
-                v-model="requirement.typeRequirement"
-                :items="typesRequirement"
-                label="Выберите подходящее требование"
-                multiple
-            >
-                <template #prepend-item>
-                    <v-list-item
-                        title="Выбрать все"
-                        @click="onSelectedAll"
+                <div class="requirement-dialog__content">
+                    <v-select
+                        v-model="requirement.typeRequirement"
+                        :items="typesRequirement"
+                        label="Выберите подходящее требование"
+                        multiple
                     >
-                        <template #prepend>
-                            <v-checkbox-btn
-                                :color="areSomeSelected ? 'indigo-darken-4' : undefined"
-                                :indeterminate="indeterminate"
-                                :model-value="areSomeSelected"
-                            />
+                        <template #prepend-item>
+                            <v-list-item
+                                title="Выбрать все"
+                                @click="onSelectedAll"
+                            >
+                                <template #prepend>
+                                    <v-checkbox-btn
+                                        :color="areSomeSelected ? 'indigo-darken-4' : undefined"
+                                        :indeterminate="indeterminate"
+                                        :model-value="areSomeSelected"
+                                    />
+                                </template>
+                            </v-list-item>
+                            <v-divider class="mt-2"></v-divider>
                         </template>
-                    </v-list-item>
-                    <v-divider class="mt-2"></v-divider>
-                </template>
-            </v-select>
+                    </v-select>
 
-            <v-textarea
-                v-model:value="requirement.descriptionRequirement"
-                label="Text"
-                counter
-            />
+                    <v-textarea
+                        v-model:value="requirement.descriptionRequirement"
+                        label="Text"
+                        counter
+                    />
+                </div>
 
-            <v-card-actions>
-                <v-spacer />
+                <v-card-actions>
+                    <v-spacer />
                 
-                <v-btn
-                    color="green-darken-1"
-                    variant="tonal"
-                    @click="opened = false"
-                >
-                    Отменить
-                </v-btn>
+                    <v-btn
+                        color="green-darken-1"
+                        variant="tonal"
+                        @click="opened = false"
+                    >
+                        Отменить
+                    </v-btn>
 
-                <v-btn
-                    color="grey-darken-1"
-                    variant="elevated"
-                    @click="onSave"
-                >
-                    Сохранить
-                </v-btn>
-            </v-card-actions>
-        </v-card>
+                    <v-btn
+                        color="grey-darken-1"
+                        variant="elevated"
+                        @click="onSave"
+                    >
+                        Сохранить
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
     </v-dialog>
   </v-row>
 </template>
 
 <script lang="ts" setup>
+import type { PropType } from 'vue'
+
 import {
     computed,
     reactive,
     ref
 } from 'vue'
 
-type Requirement = {
-    disciplineName: string,
-    typeRequirement: string[],
-    descriptionRequirement: string
-}
+import type { Requirement } from '../types/requirement' 
+
+const props = defineProps({
+    requirement: {
+        type: null as unknown as PropType<Requirement>,
+        default: () => {},
+    }
+})
 
 const opened = ref(true)
 const typesRequirement = reactive(['ТСО'])
 
-const requirement: Requirement = reactive({
-    disciplineName: 'Математипческий анализ',
-    typeRequirement: [],
-    descriptionRequirement: ''
-})
-
-/*
-:rules="textareaRules" for textarea
-const textareaRules = reactive([
-    v => v.length <= 150 || 'Максимально допустимый размер 150 символов!'
-])*/
-
 const areAllSelected = computed((): boolean => {
-    return requirement.typeRequirement.length === typesRequirement.length
+    return props.requirement?.typeRequirement.length === typesRequirement.length
 })
 const areSomeSelected = computed((): boolean => {
-    return requirement.typeRequirement.length > 0
+    return !!props.requirement && props.requirement?.typeRequirement.length > 0
 })
 
 const indeterminate = computed((): boolean => {
@@ -135,7 +129,7 @@ const onSelectedAll = () => {}
   }
 
   &__content {
-    padding: 24px;
+    padding: 16px;
   }
 }
 </style>

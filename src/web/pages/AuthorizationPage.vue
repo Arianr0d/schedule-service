@@ -55,6 +55,7 @@ import {
     reactive,
     ref,
 } from 'vue'
+import { useRouter } from 'vue-router'
 
 import login from '../api/login'
 
@@ -63,6 +64,7 @@ import { useUserStore } from '../stores/user'
 const store = useUserStore()
 
 const loading = ref(false)
+const router = useRouter()
 
 const form = reactive({
     login: '',
@@ -75,12 +77,20 @@ const onSubmit = async () => {
         loading.value = true
 
         const { id, token, userInfo } = await login('http://localhost:8081/api', form.login, form.password)
+        
         store.set(id, token, userInfo )
+        navigateToHomePage()
     } catch (err) {
         console.log(err)
     } finally {
         loading.value = false
     }
+}
+
+const navigateToHomePage = () => {
+    router.push({
+        path: '/'
+    })
 }
 </script>
 

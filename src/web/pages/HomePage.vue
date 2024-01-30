@@ -1,8 +1,10 @@
 <template>
     <div class="schedule-form">
-        <MainHeader />
+        <MainHeader :user-info="userStore.userInfo" />
 
-        <v-card flat title="Nutrition" class="schedule-form__table">
+
+
+        <!--<v-card flat title="Nutrition" class="schedule-form__table">
             <template #text>
                 <v-text-field
                     v-model="searchValue"
@@ -19,7 +21,7 @@
                 :items="tableData"
                 :search="searchValue"
             ></v-data-table>
-        </v-card>
+        </v-card>-->
 
         <AddRequirementPopup />
     </div>
@@ -27,14 +29,18 @@
 
 <script lang="ts" setup>
 import {
+    computed,
     reactive,
     readonly,
     ref
 } from 'vue'
 
-import AddRequirementPopup from '@/web/components/AddRequirementPopup.vue'
-import MainHeader from '@/web/components/MainHeader.vue'
+import AddRequirementPopup from '../components/AddRequirementPopup.vue'
+import MainHeader from '../components/MainHeader.vue'
 
+import { useUserStore } from '../stores/user'
+
+const userStore = useUserStore()
 const searchValue = ref('')
 
 const headers = reactive(readonly<[
