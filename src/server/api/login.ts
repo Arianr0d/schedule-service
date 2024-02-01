@@ -3,9 +3,9 @@ import { Request, Response } from "express"
 
 import jwt from "jsonwebtoken"
 
-import config from '../tsconfige.json'
+import config from '../config.json'
 
-export async function login(req: Request, res: Response) {
+export default async (req: Request, res: Response) => {
     const login = req.body.login
     const password = req.body.password
 
