@@ -10,24 +10,18 @@ export default async (req: Request, res: Response) => {
     const password = req.body.password
 
     const requestIdUser = await db.query(
-        `
-            SELECT id as userId FROM "UserSchedule"
-	            WHERE login = $1 AND password = $2
-        `,
+        `SELECT id FROM "UserSchedule" WHERE login = $1 AND password = $2`,
         [login, password]
     )
 
     try {
-        const userId = requestIdUser.rows[0].userid
+        const userId = requestIdUser.rows[0].id
 
-        const { privateKey } = config
-        const token = jwt.sign({ id: userId }, privateKey, { algorithm: 'HS256' })
-
-        const userInfo = await db.query(
+        const data = await db.query(
             `
                 SELECT
-                    teacherid AS "teacherId",
-                    fullnameteacher AS "fullNameTeacher",
+                    teacherid AS id,
+                    fullnameteacher AS "fullName",
                     chairname AS "chairName",
 	                facultycode AS "facultyCode"
                 FROM "UserInfo"($1)
@@ -35,10 +29,12 @@ export default async (req: Request, res: Response) => {
             [userId]
         )
 
+        const { privateKey } = config
+        const token = jwt.sign({ id: data.rows[0].id }, privateKey, { algorithm: 'HS256' })
+
         res.send({
             token,
-            id: userId,
-            userInfo: userInfo.rows[0],
+            ...data.rows[0],
         })
     } catch (err) {
         throw 'Invalid login or password'

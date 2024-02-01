@@ -1,31 +1,37 @@
+import type { AuthenticatedUser, User } from '../types/user'
+
 import { defineStore } from 'pinia'
 
-import {
-    LoginResponse,
-    UserInfo,
-} from '../types/userInfo'
-
-
 export const useUserStore = defineStore('user', {
-    state: (): LoginResponse => {
+    state: (): AuthenticatedUser => {
         return {
             id: 0,
             token: null,
-            userInfo: null,
+            fullName: '',
+            chairName: '',
+            facultyCode: ''
         }
     },
 
+    getters: {
+        user: state => state
+    },
+
     actions: {
-        set (id: number, token: string|null, userInfo: UserInfo|null) {
-            this.id = id
+        set (token: string|null, user: User) {
+            this.id = user.id
             this.token = token
-            this.userInfo = userInfo
+            this.fullName = user.fullName
+            this.chairName = user.chairName
+            this.facultyCode = user.facultyCode
         },
 
         unset () {
             this.id = 0
             this.token = null
-            this.userInfo = null
+            this.fullName = ''
+            this.chairName = ''
+            this.facultyCode = ''
         }
     }
 })

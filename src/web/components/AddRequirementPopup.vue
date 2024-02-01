@@ -78,6 +78,7 @@ import type { PropType } from 'vue'
 
 import {
     computed,
+    onBeforeMount,
     reactive,
     ref
 } from 'vue'
@@ -103,6 +104,10 @@ const areSomeSelected = computed((): boolean => {
 
 const indeterminate = computed((): boolean => {
     return areSomeSelected.value && !areAllSelected.value
+})
+
+onBeforeMount(() => {
+
 })
 
 const onSave = () => {}

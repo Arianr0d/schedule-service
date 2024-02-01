@@ -76,21 +76,16 @@ const onSubmit = async () => {
     try {
         loading.value = true
 
-        const { id, token, userInfo } = await login('http://localhost:8081/api', form.login, form.password)
+        const { token, ...user } = await login('http://localhost:8081/api', form.login, form.password)
         
-        store.set(id, token, userInfo )
-        navigateToHomePage()
+        store.set(token, user)
+
+        router.push({ path: '/' })
     } catch (err) {
         console.log(err)
     } finally {
         loading.value = false
     }
-}
-
-const navigateToHomePage = () => {
-    router.push({
-        path: '/'
-    })
 }
 </script>
 

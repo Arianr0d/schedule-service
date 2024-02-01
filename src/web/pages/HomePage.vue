@@ -1,8 +1,6 @@
 <template>
     <div class="schedule-form">
-        <MainHeader :user-info="userStore.userInfo" />
-
-
+        <MainHeader :user="store.user" />
 
         <!--<v-card flat title="Nutrition" class="schedule-form__table">
             <template #text>
@@ -23,7 +21,13 @@
             ></v-data-table>
         </v-card>-->
 
-        <AddRequirementPopup />
+        <AddRequirementPopup
+            :requirement="{
+                disciplineName: '',
+                typeRequirement: [''],
+                descriptionRequirement: ''
+            }"
+        />
     </div>
 </template>
 
@@ -40,7 +44,8 @@ import MainHeader from '../components/MainHeader.vue'
 
 import { useUserStore } from '../stores/user'
 
-const userStore = useUserStore()
+const store = useUserStore()
+console.log('store', store)
 const searchValue = ref('')
 
 const headers = reactive(readonly<[

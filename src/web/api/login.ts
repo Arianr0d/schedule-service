@@ -1,6 +1,6 @@
-import { LoginResponse } from '../types/userInfo'
+import { AuthenticatedUser } from '../types/user'
 
-export default async (url: string, login: string, password: string): Promise<LoginResponse> => { 
+export default async (url: string, login: string, password: string): Promise<AuthenticatedUser> => { 
     try {
         const response = await fetch(url + '/login', {
             method: "POST",
@@ -15,8 +15,10 @@ export default async (url: string, login: string, password: string): Promise<Log
 
         return {
             id: data.id,
+            fullName: data.fullName,
+            chairName: data.chairName,
+            facultyCode: data.facultyCode,
             token: data.token,
-            userInfo: data.userInfo,
         }
     } catch (err) {
         throw 'Error fetching'   
