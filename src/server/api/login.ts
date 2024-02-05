@@ -9,32 +9,28 @@ export default async (req: Request, res: Response) => {
     const login = req.body.login
     const password = req.body.password
 
-    const requestIdUser = await db.query(
-        `SELECT id FROM "UserSchedule" WHERE login = $1 AND password = $2`,
+    const requestUser = await db.query(
+        `
+            SELECT
+                id,
+                fullname AS "fullName",
+                chair_name AS "chairName",
+                faculty_code AS "facultyCode"
+            FROM t_user
+            WHERE login = $1 AND password = $2
+        `,
         [login, password]
     )
 
     try {
-        const userId = requestIdUser.rows[0].id
-
-        const data = await db.query(
-            `
-                SELECT
-                    teacherid AS id,
-                    fullnameteacher AS "fullName",
-                    chairname AS "chairName",
-	                facultycode AS "facultyCode"
-                FROM "UserInfo"($1)
-            `, 
-            [userId]
-        )
+        const data = requestUser.rows[0]
 
         const { privateKey } = config
-        const token = jwt.sign({ id: data.rows[0].id }, privateKey, { algorithm: 'HS256' })
+        const token = jwt.sign({ id: data.id }, privateKey, { algorithm: 'HS256' })
 
         res.send({
             token,
-            ...data.rows[0],
+            ...data,
         })
     } catch (err) {
         throw 'Invalid login or password'

@@ -5,6 +5,7 @@ import cors from 'cors'
 import morgan from 'morgan'
 
 import { userRoute } from './routes/userRouter'
+import { scheduleRoute } from './routes/scheduleRouter'
 
 import errorHandlers from './helpers/errorHandlers'
 
@@ -15,10 +16,11 @@ const app: Express = express()
 app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors({
-    origin: ['http://localhost:5173'],
+    origin: [process.env.WEB_URL as string],
 }))
 
 app.use('/api', userRoute)
+app.use('/api', scheduleRoute)
 
 app.use(errorHandlers)
 
