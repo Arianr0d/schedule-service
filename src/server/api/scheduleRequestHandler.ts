@@ -4,10 +4,11 @@ import { Request, Response } from "express"
 
 export async function getScheduleByUser(req: Request, res: Response) {
     const userId = req.body.userId
+    const sortBy = req.body.sortBy
 
     const request = await db.query(
         `
-            SELECT
+            SELECT DISTINCT
                 schedule_id AS "scheduleId",
                 discipline_code AS "disciplineCode",
                 discipline_name AS "disciplineName",
@@ -24,12 +25,16 @@ export async function getScheduleByUser(req: Request, res: Response) {
                 requirement_description AS "requirementDescription"
             FROM schedule_all_user
                 WHERE teacher_id = $1
-        `,
-        [userId]
+        ` + (
+                sortBy
+                ? `ORDER BY "${sortBy.key}" ` + (sortBy.order === 'asc' ? `ASC` : `DESC`)
+                : ``
+            ),
+        [userId],
     )
 
     try {
-        res.send({ schedules: request.rows })
+        res.send(request.rows)
     } catch (err) {
         throw 'Not found schedule for user'
     }
