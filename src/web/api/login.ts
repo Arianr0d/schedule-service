@@ -21,6 +21,6 @@ export default async (url: string, login: string, password: string): Promise<Aut
             token: data.token,
         }
     } catch (err) {
-        throw 'Error fetching'   
+        throw 'Error fetching'
     }
 }
