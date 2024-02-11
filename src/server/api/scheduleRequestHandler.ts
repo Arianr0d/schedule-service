@@ -23,7 +23,7 @@ export async function getScheduleByUser(req: Request, res: Response) {
                 course,
                 number_students AS "numberStudents",
                 lesson_type AS "lessonType",
-                kindofwishes_id AS "kindOfWishesId",
+                requirement_type_id AS "requirementTypeId",
                 requirement_type AS "requirementType",
                 requirement_description AS "requirementDescription"
             FROM schedule_all_user

@@ -113,7 +113,7 @@ const headers = ref([
         title: 'Тип занятия'
     },
     {
-        key: 'kindOfWishesId',
+        key: 'requirementTypeId',
         title: 'ID требования'
     },
     {
@@ -155,7 +155,7 @@ const onClick = (event: Event, { item }: { item: Schedule }) => {
         currentRequirement.value = {
             scheduleId: item.scheduleId,
             disciplineName: item.disciplineName,
-            kindOfWishesId: item.kindOfWishesId,
+            requirementTypeId: item.requirementTypeId,
             typeRequirement: item.requirementType,
             descriptionRequirement: item.requirementDescription
         }

@@ -12,7 +12,7 @@ export interface Schedule {
     course: number;
     numberStudents: number;
     lessonType: LessonType;
-    kindOfWishesId: number | null;
+    requirementTypeId: number | null;
     requirementType: string | null;
     requirementDescription: string | null;
 }

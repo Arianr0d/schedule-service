@@ -6,7 +6,7 @@ import {
 
 export default async (url: string, userId: number, sortBy: SortBy|null, search: Search): Promise<Schedule[]> => {
     try {
-        const response = await fetch(url + '/', {
+        const response = await fetch(url + '/schedule', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
