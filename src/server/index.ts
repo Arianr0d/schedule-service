@@ -4,8 +4,9 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import morgan from 'morgan'
 
-import { userRoute } from './routes/userRouter'
 import { scheduleRoute } from './routes/scheduleRouter'
+import { typesRequirementRoute } from './routes/typeRequirementRouter'
+import { userRoute } from './routes/userRouter'
 
 import errorHandlers from './helpers/errorHandlers'
 
@@ -19,8 +20,9 @@ app.use(cors({
     origin: [process.env.WEB_URL as string],
 }))
 
-app.use('/api', userRoute)
 app.use('/api', scheduleRoute)
+app.use('/api', typesRequirementRoute)
+app.use('/api', userRoute)
 
 app.use(errorHandlers)
 

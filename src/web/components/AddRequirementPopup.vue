@@ -16,10 +16,13 @@
 
                 <div class="requirement-dialog__content">
                     <v-select
-                        v-model="requirement.typeRequirement"
+                        v-model="selectTypeRequirement"
                         :items="typesRequirement"
+                        item-title="typeRequirement"
+                        item-value="requirementTypeId"
                         density="compact"
                         label="Выберите подходящее требование"
+                        return-object
                     />
 
                     <v-textarea
@@ -56,13 +59,19 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue'
 
-import type { Requirement } from '../types/requirement' 
+import type {
+    Requirement,
+    TypeRequirement
+} from '../types/requirement' 
 
 import {
     computed,
     defineEmits,
-    reactive
+    onBeforeMount,
+    ref
 } from 'vue'
+
+import getTypeRequirement from '../api/typesRequirement'; 
 
 const props = defineProps({
     opened: {
@@ -78,9 +87,30 @@ const props = defineProps({
 
 const emits = defineEmits([ 'close' ])
 
+const typesRequirement = ref([] as TypeRequirement[])
+const selectTypeRequirement = computed({
+    get (): TypeRequirement {
+        return {
+            requirementTypeId: props.requirement.requirementTypeId,
+            typeRequirement: props.requirement.typeRequirement 
+        }
+    },
+    
+    set (value: TypeRequirement) {
+        props.requirement.requirementTypeId = value.requirementTypeId
+        props.requirement.typeRequirement = value.typeRequirement
+    }
+})
+
 const open = computed(() => props.opened)
 
-const typesRequirement = reactive(['ТСО'])
+onBeforeMount(async () => {
+    try {
+        typesRequirement.value = await getTypeRequirement('http://localhost:8081/api')
+    } catch (e) {
+        console.log(e)
+    }
+})
 
 const onSave = () => {
     //fetch

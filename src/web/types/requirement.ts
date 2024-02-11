@@ -1,7 +1,10 @@
-export interface Requirement {
+export interface TypeRequirement {
+    requirementTypeId: number | null;
+    typeRequirement: string | null;
+}
+
+export interface Requirement extends TypeRequirement {
     scheduleId: number;
     disciplineName: string;
-    kindOfWishesId: number | null;
-    typeRequirement: string | null;
     descriptionRequirement: string | null;
 }
