@@ -1,20 +1,18 @@
 import { Schedule } from '../types/schedule'
+import {
+    SortBy,
+    Search,
+} from '../types/table'
 
-type SortBy = {
-    key: string,
-    order: string,
-}
-
-export default async (url: string, userId: number, sortBy: SortBy|null): Promise<Schedule[]> => {
+export default async (url: string, userId: number, sortBy: SortBy|null, search: Search): Promise<Schedule[]> => {
     try {
-        console.log(sortBy)
         const response = await fetch(url + '/', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
                 'API-Key': 'secret'
             },
-            body: JSON.stringify({ userId, sortBy }),
+            body: JSON.stringify({ userId, sortBy, search }),
         })
 
         const data = await response.json()

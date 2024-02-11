@@ -8,11 +8,11 @@
             :items-length="totalItems"
             :items="schedulesRows"
             :loading="loading"
-            :search="searchValue"
+            :search="tableSearch"
             item-value="disciplineName"
             class="schedule-form__table"
             @update:options="loadData"
-            @click="onClick"
+            @click:row="onClick"
         >
             <template #tfoot>
                 <tr>
@@ -20,7 +20,7 @@
                     <td/>
                     <td>
                         <v-text-field
-                            v-model="searchColumn"
+                            v-model="searchValue"
                             placeholder="Поиск по дисциплине"
                             class="ma-2 schedule-form__search-field"
                             density="compact"
@@ -32,17 +32,19 @@
         </v-data-table-server>
 
         <AddRequirementPopup
-            :requirement="{
-                disciplineName: '',
-                typeRequirement: [''],
-                descriptionRequirement: ''
-            }"
+            :opened="openPopup"
+            :requirement="currentRequirement"
+            @close="onClosePopup"
         />
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import type { Schedule } from '../types/schedule'
+import type { SortBy } from '../types/table'
+import type { Requirement } from '../types/requirement'
+
+import { ref, watch } from 'vue'
 
 import AddRequirementPopup from '../components/AddRequirementPopup.vue'
 import MainHeader from '../components/MainHeader.vue'
@@ -51,17 +53,18 @@ import { useUserStore } from '../stores/user'
 
 import getSchedules from '../api/schedules'
 
-import { Schedule } from '../types/schedule'
-
 const store = useUserStore()
 
-let schedulesRows = ref([] as Schedule[])
-let totalItems = ref(0)
+const schedulesRows = ref([] as Schedule[])
+const currentRequirement = ref({} as Requirement)
+const totalItems = ref(0)
 
+const tableSearch = ref('')
 const searchValue = ref('')
-const searchColumn = ref('')
 const itemsPerPage = ref(10)
+
 const loading = ref(true)
+const openPopup = ref(false)
 
 const headers = ref([
     {
@@ -123,11 +126,6 @@ const headers = ref([
     }
 ] as const)
 
-type SortBy = {
-    key: string,
-    order: string,
-}
-
 const loadData = async ({ sortBy }: { sortBy: SortBy[] }) => {
     loading.value = true
 
@@ -136,7 +134,11 @@ const loadData = async ({ sortBy }: { sortBy: SortBy[] }) => {
         schedulesRows.value = await getSchedules(
             'http://localhost:8081/api',
             store.user.id,
-            sortBy.length ? sortBy[0] : null
+            sortBy.length ? sortBy[0] : null,
+            {
+                value: searchValue.value,
+                column: 'disciplineName',
+            },
         )
         totalItems.value = schedulesRows.value.length
     } catch (err) {
@@ -146,8 +148,26 @@ const loadData = async ({ sortBy }: { sortBy: SortBy[] }) => {
     }
 }
 
-const onClick = (data: any) => {
-    console.log('onClick', data)
+watch(searchValue, () => tableSearch.value = String(Date.now()))
+
+const onClick = (event: Event, { item }: { item: Schedule }) => {
+    if (item) {
+        currentRequirement.value = {
+            scheduleId: item.scheduleId,
+            disciplineName: item.disciplineName,
+            kindOfWishesId: item.kindOfWishesId,
+            typeRequirement: item.requirementType,
+            descriptionRequirement: item.requirementDescription
+        }
+
+        openPopup.value = true
+    }
+
+    return
+}
+
+const onClosePopup = () => {
+    openPopup.value = false
 }
 </script>
 

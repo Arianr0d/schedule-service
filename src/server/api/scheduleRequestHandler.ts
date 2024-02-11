@@ -2,9 +2,12 @@ import db from "../../db"
 
 import { Request, Response } from "express"
 
+import { SortBy, Search } from '../../web/types/table'
+
 export async function getScheduleByUser(req: Request, res: Response) {
     const userId = req.body.userId
-    const sortBy = req.body.sortBy
+    const sortBy: SortBy|null = req.body.sortBy
+    const search: Search = req.body.search
 
     const request = await db.query(
         `
@@ -24,13 +27,14 @@ export async function getScheduleByUser(req: Request, res: Response) {
                 requirement_type AS "requirementType",
                 requirement_description AS "requirementDescription"
             FROM schedule_all_user
-                WHERE teacher_id = $1
-        ` + (
-                sortBy
-                ? `ORDER BY "${sortBy.key}" ` + (sortBy.order === 'asc' ? `ASC` : `DESC`)
-                : ``
-            ),
-        [userId],
+                WHERE teacher_id = ${userId}
+                    AND discipline_name LIKE '%${search.value}%'
+                ${
+                    sortBy
+                    ? `ORDER BY "${sortBy.key}" ${sortBy.order}`
+                    : ``
+                }
+        `
     )
 
     try {
