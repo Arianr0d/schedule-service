@@ -1,16 +1,12 @@
 <template>
     <v-row justify="center">
         <v-dialog
-            v-model="opened"
+            v-model="open"
             persistent
-            width="500"
+            width="550"
         >
-            <template #activator="{ props }">
-                <slot name="trigger" />
-            </template>
-        
             <v-card>
-                <v-card-title class="text-h5">
+                <v-card-title class="requirement-dialog__title">
                     Требования к дисциплине
 
                     <span class="requirement-dialog__label">
@@ -22,28 +18,12 @@
                     <v-select
                         v-model="requirement.typeRequirement"
                         :items="typesRequirement"
+                        density="compact"
                         label="Выберите подходящее требование"
-                        multiple
-                    >
-                        <template #prepend-item>
-                            <v-list-item
-                                title="Выбрать все"
-                                @click="onSelectedAll"
-                            >
-                                <template #prepend>
-                                    <v-checkbox-btn
-                                        :color="areSomeSelected ? 'indigo-darken-4' : undefined"
-                                        :indeterminate="indeterminate"
-                                        :model-value="areSomeSelected"
-                                    />
-                                </template>
-                            </v-list-item>
-                            <v-divider class="mt-2"></v-divider>
-                        </template>
-                    </v-select>
+                    />
 
                     <v-textarea
-                        v-model:value="requirement.descriptionRequirement"
+                        v-model="requirement.descriptionRequirement"
                         label="Text"
                         counter
                     />
@@ -55,7 +35,7 @@
                     <v-btn
                         color="green-darken-1"
                         variant="tonal"
-                        @click="opened = false"
+                        @click="$emit('close')"
                     >
                         Отменить
                     </v-btn>
@@ -76,43 +56,36 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue'
 
-import {
-    computed,
-    onBeforeMount,
-    reactive,
-    ref
-} from 'vue'
-
 import type { Requirement } from '../types/requirement' 
 
+import {
+    computed,
+    defineEmits,
+    reactive
+} from 'vue'
+
 const props = defineProps({
+    opened: {
+        type: Boolean,
+        default: false
+    },
+
     requirement: {
         type: null as unknown as PropType<Requirement>,
         default: () => {},
     }
 })
 
-const opened = ref(true)
+const emits = defineEmits([ 'close' ])
+
+const open = computed(() => props.opened)
+
 const typesRequirement = reactive(['ТСО'])
 
-const areAllSelected = computed((): boolean => {
-    return props.requirement?.typeRequirement.length === typesRequirement.length
-})
-const areSomeSelected = computed((): boolean => {
-    return !!props.requirement && props.requirement?.typeRequirement.length > 0
-})
-
-const indeterminate = computed((): boolean => {
-    return areSomeSelected.value && !areAllSelected.value
-})
-
-onBeforeMount(() => {
-
-})
-
-const onSave = () => {}
-const onSelected = () => {}
-const onSelectedAll = () => {}
+const onSave = () => {
+    //fetch
+    emits('close')
+}
 </script>
 
 <style lang="less">
@@ -127,7 +100,6 @@ const onSelectedAll = () => {}
   }
 
   &__label {
-    margin-left: @spacing-lg;
     font-size: 16px;
     color: grey;
     text-decoration: underline;
