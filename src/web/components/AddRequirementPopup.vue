@@ -34,6 +34,15 @@
 
                 <v-card-actions>
                     <v-spacer />
+
+                    <v-btn
+                        v-if="deleted"
+                        color="red-darken-1"
+                        variant="tonal"
+                        @click="onDelete"
+                    >
+                        Удалить
+                    </v-btn>
                 
                     <v-btn
                         color="green-darken-1"
@@ -71,7 +80,8 @@ import {
     ref
 } from 'vue'
 
-import getTypeRequirement from '../api/typesRequirement'; 
+import { deleteRequirement } from '../api/requirement'
+import getTypeRequirement from '../api/typesRequirement'
 
 const props = defineProps({
     opened: {
@@ -88,6 +98,8 @@ const props = defineProps({
 const emits = defineEmits([ 'close' ])
 
 const typesRequirement = ref([] as TypeRequirement[])
+
+const deleted = computed(() => props.requirement && props.requirement.requirementTypeId)
 const selectTypeRequirement = computed({
     get (): TypeRequirement {
         return {
@@ -115,6 +127,21 @@ onBeforeMount(async () => {
 const onSave = () => {
     //fetch
     emits('close')
+}
+
+const onDelete = async () => {
+    try {
+        // TODO: добавить обработку запроса, при ошибке подсвечивать алерт
+        await deleteRequirement(
+            'http://localhost:8081/api',
+            props.requirement.requirementTypeId as number,
+            props.requirement.scheduleId,
+        )
+    } catch (e) {
+        console.log(e)
+    } finally {
+        emits('close')
+    }
 }
 </script>
 

@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import morgan from 'morgan'
 
+import { requirementRoute } from './routes/requirement'
 import { scheduleRoute } from './routes/scheduleRouter'
 import { typesRequirementRoute } from './routes/typeRequirementRouter'
 import { userRoute } from './routes/userRouter'
@@ -20,6 +21,7 @@ app.use(cors({
     origin: [process.env.WEB_URL as string],
 }))
 
+app.use('/api', requirementRoute)
 app.use('/api', scheduleRoute)
 app.use('/api', typesRequirementRoute)
 app.use('/api', userRoute)
