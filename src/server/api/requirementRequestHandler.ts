@@ -2,7 +2,7 @@ import db from "../../db"
 
 import { Request, Response } from "express"
 
-export async function deleteRequirement(req: Request, res: Response) {
+export async function deleteRequirement (req: Request, res: Response) {
     const id = req.body.id
     const scheduleId = req.body.scheduleId
 
@@ -18,14 +18,15 @@ export async function deleteRequirement(req: Request, res: Response) {
     }
 }
 
-export async function updateRequirement(req: Request, res: Response) {
-    const id = req.body.id
+export async function updateRequirement (req: Request, res: Response) {
+    const id = req.body.requirementTypeId
+    const description = req.body.descriptionRequirement
     const scheduleId = req.body.scheduleId
-
+    
     try {
         const request = await db.query(
-            `SELECT delete_requirement($1, $2)`,
-            [scheduleId, id],
+            `SELECT update_requirement($1, $2, $3)`,
+            [scheduleId, id, description],
         )
 
         res.send()
@@ -34,18 +35,19 @@ export async function updateRequirement(req: Request, res: Response) {
     }
 }
 
-export async function createRequirement(req: Request, res: Response) {
-    const id = req.body.id
+export async function insertRequirement (req: Request, res: Response) {
+    const id = req.body.requirementTypeId
+    const description = req.body.descriptionRequirement
     const scheduleId = req.body.scheduleId
 
     try {
         const request = await db.query(
-            `SELECT delete_requirement($1, $2)`,
-            [scheduleId, id],
+            `SELECT insert_requirement($1, $2, $3)`,
+            [scheduleId, id, description],
         )
 
         res.send()
     } catch (err) {
-        throw 'Not found schedule or requirement'
+        throw 'Not found schedule'
     }
 }

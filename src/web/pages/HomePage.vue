@@ -34,6 +34,7 @@
         <AddRequirementPopup
             :opened="openPopup"
             :requirement="currentRequirement"
+            :requirementId="currentRequirement.requirementTypeId"
             @close="onClosePopup"
         />
     </div>
@@ -154,7 +155,6 @@ const onClick = (event: Event, { item }: { item: Schedule }) => {
     if (item) {
         currentRequirement.value = {
             scheduleId: item.scheduleId,
-            disciplineName: item.disciplineName,
             requirementTypeId: item.requirementTypeId,
             typeRequirement: item.requirementType,
             descriptionRequirement: item.requirementDescription

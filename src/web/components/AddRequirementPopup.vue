@@ -10,7 +10,7 @@
                     Требования к дисциплине
 
                     <span class="requirement-dialog__label">
-                        {{ requirement.disciplineName }}
+                        {{ disciplineName }}
                     </span>
                 </v-card-title>
 
@@ -75,12 +75,15 @@ import type {
 
 import {
     computed,
-    defineEmits,
     onBeforeMount,
     ref
 } from 'vue'
 
-import { deleteRequirement } from '../api/requirement'
+import {
+    deleteRequirement,
+    insertRequirement,
+    updateRequirement,
+} from '../api/requirement'
 import getTypeRequirement from '../api/typesRequirement'
 
 const props = defineProps({
@@ -92,6 +95,16 @@ const props = defineProps({
     requirement: {
         type: null as unknown as PropType<Requirement>,
         default: () => {},
+    },
+
+    requirementId: {
+        type: null as unknown as PropType<Number|null>,
+        default: null,
+    },
+
+    disciplineName: {
+        type: String,
+        default: '',
     }
 })
 
@@ -124,9 +137,25 @@ onBeforeMount(async () => {
     }
 })
 
-const onSave = () => {
-    //fetch
-    emits('close')
+const onSave = async () => {
+    const requirement = {
+        requirementTypeId: props.requirement.requirementTypeId,
+        typeRequirement: props.requirement.typeRequirement,
+        scheduleId: props.requirement.scheduleId,
+        descriptionRequirement: props.requirement.descriptionRequirement,
+    }
+
+    try {
+        if (props.requirementId) {
+            await updateRequirement('http://localhost:8081/api', requirement)
+        } else {
+            await insertRequirement('http://localhost:8081/api', requirement)
+        }
+    } catch (e) {
+        console.log(e)
+    } finally {
+        emits('close')
+    }
 }
 
 const onDelete = async () => {

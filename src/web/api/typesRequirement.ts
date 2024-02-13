@@ -13,8 +13,6 @@ export default async (url: string): Promise<TypeRequirement[]> => {
 
         const data = await response.json()
 
-        console.log([ ...data ])
-
         return [ ...data ]
     } catch (err) {
         throw 'Error fetching'
