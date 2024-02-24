@@ -1,54 +1,63 @@
 <template>
-    <header class="schedule-form-header">
-        <div class="schedule-form-header__logo">
-            <span class="schedule-form-header__label-logo">ЭИОС "ЛГТУ"</span>
-        </div>
+	<header class="schedule-form-header">
+		<div class="schedule-form-header__logo">
+			<span class="schedule-form-header__label-logo">ЭИОС "ЛГТУ"</span>
+		</div>
 
-        <div class="schedule-form-header__action">
-            <v-menu transition="slide-y-transition">
-                <template #activator="{ props }">
-                    <v-btn
-                        icon="mdi-account-badge-outline"
-                        v-bind="props"
-                        size="small"
-                        class="schedule-form-header__icon"
-                        @click="openAboutUser = !openAboutUser"
-                    ></v-btn>
-                </template>
+		<div class="schedule-form-header__action">
+			<v-menu transition="slide-y-transition">
+				<template #activator="{ props }">
+					<v-btn
+						icon="mdi-account-badge-outline"
+						v-bind="props"
+						size="small"
+						class="schedule-form-header__icon"
+						@click="openAboutUser = !openAboutUser"
+					/>
+				</template>
 
-                <v-card class="schedule-form-header__menu">
-                    <v-card title="ФИО:" :subtitle="user?.fullName"></v-card>
-                    <v-card title="Факультет:" :subtitle="user?.facultyCode"></v-card>
-                    <v-card title="Кафедра:" :subtitle="user?.chairName"></v-card>
-                </v-card>
-            </v-menu>
+				<v-card class="schedule-form-header__menu">
+					<v-card
+						title="ФИО:"
+						:subtitle="user?.fullName"
+					/>
+					<v-card
+						title="Факультет:"
+						:subtitle="user?.facultyCode"
+					/>
+					<v-card
+						title="Кафедра:"
+						:subtitle="user?.chairName"
+					/>
+				</v-card>
+			</v-menu>
 
-            <v-btn
-                icon="mdi-account-arrow-right-outline"
-                size="small"
-                class="schedule-form-header__icon"
-                @click="logout"
-            ></v-btn>
-        </div>
-    </header>
+			<v-btn
+				icon="mdi-account-arrow-right-outline"
+				size="small"
+				class="schedule-form-header__icon"
+				@click="logout"
+			/>
+		</div>
+	</header>
 </template>
 
 <script lang="ts" setup>
-import type { PropType } from 'vue'
-import type { User } from '../types/user'
+import type { PropType } from 'vue';
+import { ref } from 'vue';
+import type { User } from '../types/user';
 
-import { ref } from 'vue'
 
 defineProps({
-    user: {
-        type: null as unknown as PropType<User|null>,
-        default: null,
-    }
-})
+	user: {
+		type: null as unknown as PropType<User|null>,
+		default: null,
+	}
+});
 
-const openAboutUser = ref(false)
+const openAboutUser = ref(false);
 
-const logout = () => {}
+const logout = () => {};
 </script>
 
 <style lang="less">

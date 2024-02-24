@@ -1,39 +1,36 @@
+
+import { createPinia } from 'pinia';
 import {
-    createApp,
-    h
-} from 'vue'
-
-import { createPinia } from 'pinia'
-
+	createApp,
+	h
+} from 'vue';
 import {
-    RouterView,
-    createRouter,
-    createWebHistory
-} from 'vue-router'
+	RouterView,
+	createRouter,
+	createWebHistory
+} from 'vue-router';
+import AuthorizationPage from './pages/AuthorizationPage.vue';
+import HomePage from './pages/HomePage.vue';
+import vuetifyPlugin from './plugins/vuetify';
 
-import vuetifyPlugin from './plugins/vuetify'
-
-import AuthorizationPage from './pages/AuthorizationPage.vue'
-import HomePage from './pages/HomePage.vue'
-
-const pinia = createPinia()
-const vuetify = vuetifyPlugin
+const pinia = createPinia();
+const vuetify = vuetifyPlugin;
 
 const routes = [
-    {
-        path: '/',
-        component: HomePage
-    },
-    {
-        path: '/login',
-        component: AuthorizationPage
-    }
-]
+	{
+		path: '/',
+		component: HomePage
+	},
+	{
+		path: '/login',
+		component: AuthorizationPage
+	}
+];
 
 const router = createRouter({
-    history: createWebHistory(), 
-    routes
-})
+	history: createWebHistory(), 
+	routes
+});
 
 /*router.beforeEach(async (to) => {
     const loginPages = ['/login']
@@ -47,13 +44,13 @@ const router = createRouter({
 })*/
 
 const app = createApp({
-    setup () {
-        return () => h(RouterView) 
-    }
-})
+	setup () {
+		return () => h(RouterView); 
+	}
+});
 
-app.use(pinia)
-app.use(vuetify)
-app.use(router)
+app.use(pinia);
+app.use(vuetify);
+app.use(router);
 
-app.mount('#app')
+app.mount('#app');

@@ -1,8 +1,8 @@
 export interface RequirementType {
-    id: number | null;
-    name: string | null;
+	id: number | null;
+	name: string | null;
 }
 
 export interface Requirement extends RequirementType {
-    description: string | null;
+	description: string | null;
 }

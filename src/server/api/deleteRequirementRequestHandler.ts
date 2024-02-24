@@ -1,6 +1,6 @@
-import db from '../../db'
+import type { Request, Response } from 'express'
 
-import type { Request, Response } from "express"
+import db from '../../db'
 
 export default async (req: Request, res: Response) => {
     const requirementId = req.body.requirementId

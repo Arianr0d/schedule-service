@@ -1,9 +1,9 @@
 export interface SortBy {
-    key: string;
-    order: string;
+	key: string;
+	order: string;
 }
 
 export interface Search {
-    value: string;
-    column: string;
+	value: string;
+	column: string;
 }
