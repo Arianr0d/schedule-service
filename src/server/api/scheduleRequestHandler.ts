@@ -1,10 +1,9 @@
-import db from "../../db"
+import  type { Request, Response } from 'express'
+import type { SortBy, Search } from '../../web/types/table'
 
-import { Request, Response } from "express"
+import db from '../../db'
 
-import { SortBy, Search } from '../../web/types/table'
-
-export async function getScheduleByUser(req: Request, res: Response) {
+export default async (req: Request, res: Response) => {
     const userId = req.body.userId
     const sortBy: SortBy|null = req.body.sortBy
     const search: Search = req.body.search
@@ -23,8 +22,8 @@ export async function getScheduleByUser(req: Request, res: Response) {
                 course,
                 number_students AS "numberStudents",
                 lesson_type AS "lessonType",
-                requirement_type_id AS "requirementTypeId",
-                requirement_type AS "requirementType",
+                requirement_id AS "requirementId",
+                requirement_name AS "requirementName",
                 requirement_description AS "requirementDescription"
             FROM schedule_all_user
                 WHERE teacher_id = ${userId}

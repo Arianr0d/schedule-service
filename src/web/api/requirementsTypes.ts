@@ -1,6 +1,6 @@
-import { TypeRequirement } from '../types/requirement'
+import { RequirementType } from '../types/requirement'
 
-export default async (url: string): Promise<TypeRequirement[]> => { 
+export default async (url: string = 'http://localhost:8081/api'): Promise<RequirementType[]> => { 
     try {
         const response = await fetch(url + '/requirement', {
             method: "POST",

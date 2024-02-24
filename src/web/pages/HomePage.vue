@@ -6,9 +6,9 @@
             v-model:items-per-page="itemsPerPage"
             :headers="headers"
             :items-length="totalItems"
-            :items="schedulesRows"
+            :items="schedules"
             :loading="loading"
-            :search="tableSearch"
+            :search="columnSearch"
             item-value="disciplineName"
             class="schedule-form__table"
             @update:options="loadData"
@@ -33,8 +33,9 @@
 
         <AddRequirementPopup
             :opened="openPopup"
-            :requirement="currentRequirement"
-            :requirementId="currentRequirement.requirementTypeId"
+            :requirement="selectedRequirement"
+            :schedule-id="selectedScheduleId"
+            :discipline-name="selectedDisciplineName"
             @close="onClosePopup"
         />
     </div>
@@ -56,13 +57,18 @@ import getSchedules from '../api/schedules'
 
 const store = useUserStore()
 
-const schedulesRows = ref([] as Schedule[])
-const currentRequirement = ref({} as Requirement)
-const totalItems = ref(0)
+const schedules = ref([] as Schedule[])
 
-const tableSearch = ref('')
-const searchValue = ref('')
+const selectedScheduleId = ref(null as number|null)
+const selectedDisciplineName = ref('')
+const selectedRequirement = ref({} as Requirement)
+
+const totalItems = ref(0)
 const itemsPerPage = ref(10)
+
+const columnSearch = ref('')
+const searchValue = ref('')
+const sortValue = ref(null as SortBy[]|null)
 
 const loading = ref(true)
 const openPopup = ref(false)
@@ -114,11 +120,11 @@ const headers = ref([
         title: 'Тип занятия'
     },
     {
-        key: 'requirementTypeId',
+        key: 'requirementId',
         title: 'ID требования'
     },
     {
-        key: 'requirementType',
+        key: 'requirementName',
         title: 'Тип пожелания'
     },
     {
@@ -127,21 +133,21 @@ const headers = ref([
     }
 ] as const)
 
-const loadData = async ({ sortBy }: { sortBy: SortBy[] }) => {
+const loadData = async ({ sortBy }: { sortBy: SortBy[]|null }) => {
     loading.value = true
 
     try {
-        schedulesRows.value = []
-        schedulesRows.value = await getSchedules(
-            'http://localhost:8081/api',
+        schedules.value = []
+        schedules.value = await getSchedules(
             store.user.id,
-            sortBy.length ? sortBy[0] : null,
+            sortBy && sortBy.length ? sortBy[0] : null,
             {
                 value: searchValue.value,
                 column: 'disciplineName',
             },
         )
-        totalItems.value = schedulesRows.value.length
+        totalItems.value = schedules.value.length
+        sortValue.value = sortBy
     } catch (err) {
         console.log(err)
     } finally {
@@ -149,15 +155,16 @@ const loadData = async ({ sortBy }: { sortBy: SortBy[] }) => {
     }
 }
 
-watch(searchValue, () => tableSearch.value = String(Date.now()))
+watch(searchValue, () => columnSearch.value = String(Date.now()))
 
 const onClick = (event: Event, { item }: { item: Schedule }) => {
     if (item) {
-        currentRequirement.value = {
-            scheduleId: item.scheduleId,
-            requirementTypeId: item.requirementTypeId,
-            typeRequirement: item.requirementType,
-            descriptionRequirement: item.requirementDescription
+        selectedScheduleId.value = item.scheduleId
+        selectedDisciplineName.value = item.disciplineName
+        selectedRequirement.value = {
+            id: item.requirementId,
+            name: item.requirementName,
+            description: item.requirementDescription,
         }
 
         openPopup.value = true
@@ -166,8 +173,9 @@ const onClick = (event: Event, { item }: { item: Schedule }) => {
     return
 }
 
-const onClosePopup = () => {
+const onClosePopup = async () => {
     openPopup.value = false
+    await loadData({ sortBy: sortValue.value })
 }
 </script>
 

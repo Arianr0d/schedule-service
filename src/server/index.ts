@@ -6,7 +6,7 @@ import morgan from 'morgan'
 
 import { requirementRoute } from './routes/requirement'
 import { scheduleRoute } from './routes/scheduleRouter'
-import { typesRequirementRoute } from './routes/typeRequirementRouter'
+import { requirementTypesRoute } from './routes/requirementTypeRouter'
 import { userRoute } from './routes/userRouter'
 
 import errorHandlers from './helpers/errorHandlers'
@@ -23,7 +23,7 @@ app.use(cors({
 
 app.use('/api', requirementRoute)
 app.use('/api', scheduleRoute)
-app.use('/api', typesRequirementRoute)
+app.use('/api', requirementTypesRoute)
 app.use('/api', userRoute)
 
 app.use(errorHandlers)

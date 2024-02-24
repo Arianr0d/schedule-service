@@ -1,13 +1,11 @@
 import {
     createApp,
-    defineComponent,
     h
 } from 'vue'
 
 import { createPinia } from 'pinia'
 
 import {
-    RouterLink,
     RouterView,
     createRouter,
     createWebHistory

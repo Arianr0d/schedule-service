@@ -16,18 +16,18 @@
 
                 <div class="requirement-dialog__content">
                     <v-select
-                        v-model="selectTypeRequirement"
-                        :items="typesRequirement"
-                        item-title="typeRequirement"
-                        item-value="requirementTypeId"
+                        v-model="selectedRequirementType"
+                        :items="requirementsTypes"
+                        item-title="name"
+                        item-value="id"
                         density="compact"
                         label="Выберите подходящее требование"
                         return-object
                     />
 
                     <v-textarea
-                        v-model="requirement.descriptionRequirement"
-                        label="Text"
+                        v-model="requirement.description"
+                        label="Текст"
                         counter
                     />
                 </div>
@@ -36,7 +36,7 @@
                     <v-spacer />
 
                     <v-btn
-                        v-if="deleted"
+                        v-if="!!requirement.id"
                         color="red-darken-1"
                         variant="tonal"
                         @click="onDelete"
@@ -67,24 +67,20 @@
 
 <script lang="ts" setup>
 import type { PropType } from 'vue'
-
 import type {
     Requirement,
-    TypeRequirement
-} from '../types/requirement' 
+    RequirementType,
+} from '../types/requirement'
 
 import {
     computed,
     onBeforeMount,
-    ref
+    ref,
 } from 'vue'
 
-import {
-    deleteRequirement,
-    insertRequirement,
-    updateRequirement,
-} from '../api/requirement'
-import getTypeRequirement from '../api/typesRequirement'
+import addRequirement from '../api/addRequirement'
+import deleteRequirement from '../api/deleteRequirement'
+import getTypesRequirements from '../api/requirementsTypes'
 
 const props = defineProps({
     opened: {
@@ -97,7 +93,7 @@ const props = defineProps({
         default: () => {},
     },
 
-    requirementId: {
+    scheduleId: {
         type: null as unknown as PropType<Number|null>,
         default: null,
     },
@@ -110,20 +106,19 @@ const props = defineProps({
 
 const emits = defineEmits([ 'close' ])
 
-const typesRequirement = ref([] as TypeRequirement[])
+const requirementsTypes = ref([] as RequirementType[])
 
-const deleted = computed(() => props.requirement && props.requirement.requirementTypeId)
-const selectTypeRequirement = computed({
-    get (): TypeRequirement {
+const selectedRequirementType = computed({
+    get (): RequirementType {
         return {
-            requirementTypeId: props.requirement.requirementTypeId,
-            typeRequirement: props.requirement.typeRequirement 
+            id: props.requirement.id,
+            name: props.requirement.name,
         }
     },
     
-    set (value: TypeRequirement) {
-        props.requirement.requirementTypeId = value.requirementTypeId
-        props.requirement.typeRequirement = value.typeRequirement
+    set (value: RequirementType) {
+        props.requirement.id = value.id
+        props.requirement.name = value.name
     }
 })
 
@@ -131,26 +126,18 @@ const open = computed(() => props.opened)
 
 onBeforeMount(async () => {
     try {
-        typesRequirement.value = await getTypeRequirement('http://localhost:8081/api')
+        requirementsTypes.value = await getTypesRequirements()
     } catch (e) {
         console.log(e)
     }
 })
 
 const onSave = async () => {
-    const requirement = {
-        requirementTypeId: props.requirement.requirementTypeId,
-        typeRequirement: props.requirement.typeRequirement,
-        scheduleId: props.requirement.scheduleId,
-        descriptionRequirement: props.requirement.descriptionRequirement,
-    }
-
     try {
-        if (props.requirementId) {
-            await updateRequirement('http://localhost:8081/api', requirement)
-        } else {
-            await insertRequirement('http://localhost:8081/api', requirement)
-        }
+        await addRequirement({
+            id: props.requirement.id,
+            description: props.requirement.description,
+        }, props.scheduleId as number)
     } catch (e) {
         console.log(e)
     } finally {
@@ -162,9 +149,8 @@ const onDelete = async () => {
     try {
         // TODO: добавить обработку запроса, при ошибке подсвечивать алерт
         await deleteRequirement(
-            'http://localhost:8081/api',
-            props.requirement.requirementTypeId as number,
-            props.requirement.scheduleId,
+            props.requirement.id as number,
+            props.scheduleId as number,
         )
     } catch (e) {
         console.log(e)

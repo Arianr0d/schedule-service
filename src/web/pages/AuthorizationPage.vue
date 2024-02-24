@@ -76,7 +76,7 @@ const onSubmit = async () => {
     try {
         loading.value = true
 
-        const { token, ...user } = await login('http://localhost:8081/api', form.login, form.password)
+        const { token, ...user } = await login(form.login, form.password)
         
         store.set(token, user)
 

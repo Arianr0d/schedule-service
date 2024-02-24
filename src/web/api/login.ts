@@ -1,6 +1,6 @@
 import { AuthenticatedUser } from '../types/user'
 
-export default async (url: string, login: string, password: string): Promise<AuthenticatedUser> => { 
+export default async (login: string, password: string, url: string = 'http://localhost:8081/api'): Promise<AuthenticatedUser> => { 
     try {
         const response = await fetch(url + '/login', {
             method: "POST",
