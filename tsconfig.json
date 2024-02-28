@@ -10,7 +10,7 @@
         "resolveJsonModule": true,
         "target": "es5",
         "skipLibCheck": true,
-        "sourceMap": true,
+        "inlineSourceMap": true,
         "strict": true,
         "useDefineForClassFields": true,
         "lib": [
