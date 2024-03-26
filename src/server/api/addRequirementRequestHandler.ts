@@ -1,6 +1,6 @@
-import db from '../../db'
-
 import type { Request, Response } from 'express'
+
+import { PostgresDataSource } from '../ormconfig'
 
 export default async (req: Request, res: Response) => {
     const requirementId = req.body.requirement.id
@@ -8,8 +8,8 @@ export default async (req: Request, res: Response) => {
     const scheduleId = req.body.scheduleId
     
     try {
-        await db.query(
-            `SELECT add_requirement($1, $2, $3)`,
+        await PostgresDataSource.query(
+            `SELECT "addRequirement"($1, $2, $3)`,
             [scheduleId, requirementId, requirementDescription],
         )
 

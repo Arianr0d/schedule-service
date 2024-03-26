@@ -1,4 +1,4 @@
-import { AuthenticatedUser } from '../types/user';
+import type { AuthenticatedUser } from '../types/user';
 
 export default async (login: string, password: string, url: string = 'http://localhost:8081/api'): Promise<AuthenticatedUser> => { 
 	try {
@@ -6,7 +6,6 @@ export default async (login: string, password: string, url: string = 'http://loc
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				'API-Key': 'secret'
 			},
 			body: JSON.stringify({ login, password }),
 		});

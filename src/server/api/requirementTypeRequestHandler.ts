@@ -1,12 +1,18 @@
-import db from "../../db"
+import  type { Request, Response } from "express"
 
-import { Request, Response } from "express"
+import { PostgresDataSource } from '../ormconfig'
+
+import { Requirement } from '../entities/requirement'
 
 export default async (req: Request, res: Response) => {
-    const request = await db.query(`SELECT * FROM t_requirement`)
+    const data = await PostgresDataSource
+        .createQueryBuilder()
+        .select('requirement')
+        .from(Requirement, 'requirement')
+        .getMany();
 
     try {
-        res.send(request.rows)
+        res.send(data)
     } catch (err) {
         throw 'Not found schedule for user'
     }

@@ -1,6 +1,8 @@
+export type Order = 'ASC' | 'DESC';
+
 export interface SortBy {
 	key: string;
-	order: string;
+	order: Order;
 }
 
 export interface Search {

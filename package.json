@@ -5,14 +5,26 @@
     "scripts": {
         "cypress:open": "cypress open",
         "lint:script": "eslint --ext .ts,vue --ignore-path .gitignore .",
+        "lint:fix": "yarn lint --fix",
         "server:start": "nodemon --inspect src/server/index.ts",
         "web:build": "vite build",
         "web:serve": "vite serve",
-        "test": "jest --watch"
+        "typeorm": "typeorm-ts-node-commonjs",
+        "migrations:generate": "yarn run typeorm migration:generate -d src/server/ormconfig.ts src/migrations/PostRefactoring",
+        "migrations:create": "yarn run typeorm migration:create src/migrations/PostRefactoring",
+        "migrations:run": "yarn run typeorm migration:run -d src/server/ormconfig.ts",
+        "migrations:revert": "yarn run typeorm migration:revert -d src/server/ormconfig.ts"
+    },
+    "eslintConfig": {
+        "extends": [
+            "plugin:cypress/recommended",
+            "plugin:@typescript-eslint/recommended"
+        ]
     },
     "dependencies": {
         "body-parser": "^1.20.2",
         "chai": "^5.1.0",
+        "cypress": "^13.6.6",
         "cors": "^2.8.5",
         "dotenv": "^16.4.1",
         "express": "^4.18.2",
@@ -23,14 +35,14 @@
         "pinia": "^2.1.7",
         "ts-node": "^10.9.2",
         "tslib": "^2.6.2",
+        "typeorm": "^0.3.20",
+        "typeorm-fixture-builder": "^3.0.0",
         "typescript": "^5.3.3",
         "vue": "^3.4.15",
         "vue-router": "^4.2.5",
         "vuetify": "^3.5.1"
     },
     "devDependencies": {
-        "cypress": "^13.6.6",
-        "cypress-vite": "^1.5.0",
         "@jest/globals": "^29.7.0",
         "@mdi/font": "^7.4.47",
         "@types/body-parser": "^1.19.5",
@@ -39,6 +51,7 @@
         "@types/jest": "^29.5.12",
         "@types/jsonwebtoken": "^9.0.5",
         "@types/morgan": "^1.9.9",
+        "@types/node": "^20.11.25",
         "@types/pg": "^8.11.0",
         "@typescript-eslint/eslint-plugin": "^7.0.2",
         "@typescript-eslint/parser": "^7.0.2",
@@ -46,6 +59,8 @@
         "@vue/compiler-sfc": "3.4.15",
         "@vue/eslint-config-typescript": "^12.0.0",
         "@vue/test-utils": "^2.4.4",
+        "class-validator": "^0.14.1",
+        "cypress-vite": "^1.5.0",
         "eslint": "^8.57.0",
         "eslint-plugin-import": "^2.29.1",
         "eslint-plugin-vue": "^9.22.0",

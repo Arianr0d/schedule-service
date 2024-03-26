@@ -1,14 +1,14 @@
 import type { Request, Response } from 'express'
 
-import db from '../../db'
+import { PostgresDataSource } from '../ormconfig'
 
 export default async (req: Request, res: Response) => {
     const requirementId = req.body.requirementId
     const scheduleId = req.body.scheduleId
 
     try {
-        await db.query(
-            `SELECT delete_requirement($1, $2)`,
+        await PostgresDataSource.query(
+            `SELECT "deleteRequirement"($1, $2)`,
             [scheduleId, requirementId],
         )
 

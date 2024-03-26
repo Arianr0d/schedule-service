@@ -137,7 +137,10 @@ const loadData = async ({ sortBy }: { sortBy: SortBy[]|null }) => {
 		schedules.value = [];
 		schedules.value = await getSchedules(
 			store.user.id,
-			sortBy && sortBy.length ? sortBy[0] : null,
+			sortBy && sortBy.length ? {
+				key: sortBy[0]?.key,
+				order: sortBy[0]?.order.toUpperCase()
+			} as SortBy : null,
 			{
 				value: searchValue.value,
 				column: 'disciplineName',

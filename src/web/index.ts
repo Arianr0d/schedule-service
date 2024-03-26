@@ -1,4 +1,3 @@
-
 import { createPinia } from 'pinia';
 import {
 	createApp,
@@ -9,6 +8,7 @@ import {
 	createRouter,
 	createWebHistory
 } from 'vue-router';
+
 import AuthorizationPage from './pages/AuthorizationPage.vue';
 import HomePage from './pages/HomePage.vue';
 import vuetifyPlugin from './plugins/vuetify';
