@@ -17,6 +17,9 @@
 
 		<v-text-field
 			v-model="form.login"
+			:readonly="loading"
+			:rules="[rule]"
+			aria-label="login"
 			density="compact"
 			placeholder="Логин"
 			prepend-inner-icon="mdi-email-outline"
@@ -30,6 +33,9 @@
 
 		<v-text-field
 			v-model="form.password"
+			aria-label="password"
+			:readonly="loading"
+			:rules="[rule]"
 			:append-inner-icon="form.passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
 			:type="form.passwordVisible ? 'text' : 'password'"
 			density="compact"
@@ -41,6 +47,7 @@
 		/>
 
 		<v-btn
+			aria-label="enter"
 			:active="!loading"
 			class="mb-8 mt-8"
 			color="blue"
@@ -65,8 +72,9 @@ import { useUserStore } from '../stores/user';
 
 const store = useUserStore();
 
-const loading = ref(false);
 const router = useRouter();
+
+const loading = ref(false);
 
 const form = reactive({
 	login: '',
@@ -82,13 +90,18 @@ const onSubmit = async () => {
         
 		store.set(token, user);
 
-		router.push({ path: '/' });
+		setTimeout(() => router.push({ path: '/' }), 2000);
 	} catch (err) {
+		form.login = '';
+		form.password = '';
+
 		console.log(err);
 	} finally {
 		loading.value = false;
 	}
 };
+
+const rule = (value: string) => !!value || 'Поле не должно быть пустым!'; 
 </script>
 
 <style lang="less">
@@ -101,7 +114,7 @@ const onSubmit = async () => {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 450px;
+    height: 460px;
     display: flex  !important;
     flex-direction: column;
 
