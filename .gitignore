@@ -1,5 +1,13 @@
+dist
 node_modules
+
 .env
-.dist
+.github
+
+/blob-report/
+/playwright-report/
+/playwright/.cache/
+/test-results/
 
 src/server/config.json
+test-examples/
