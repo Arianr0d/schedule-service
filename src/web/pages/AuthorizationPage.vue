@@ -18,8 +18,8 @@
 		<v-text-field
 			v-model="form.login"
 			:readonly="loading"
-			:rules="[rule]"
-			aria-label="login"
+			:rules="[ruleForLogin]"
+			aria-label="Логин"
 			density="compact"
 			placeholder="Логин"
 			prepend-inner-icon="mdi-email-outline"
@@ -33,9 +33,9 @@
 
 		<v-text-field
 			v-model="form.password"
-			aria-label="password"
+			aria-label="Пароль"
 			:readonly="loading"
-			:rules="[rule]"
+			:rules="[ruleForPassword]"
 			:append-inner-icon="form.passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
 			:type="form.passwordVisible ? 'text' : 'password'"
 			density="compact"
@@ -47,7 +47,7 @@
 		/>
 
 		<v-btn
-			aria-label="enter"
+			aria-label="Войти"
 			:active="!loading"
 			class="mb-8 mt-8"
 			color="blue"
@@ -71,7 +71,6 @@ import login from '../api/login';
 import { useUserStore } from '../stores/user';
 
 const store = useUserStore();
-
 const router = useRouter();
 
 const loading = ref(false);
@@ -101,7 +100,8 @@ const onSubmit = async () => {
 	}
 };
 
-const rule = (value: string) => !!value || 'Поле не должно быть пустым!'; 
+const ruleForLogin = (value: string) => !!value || 'Поле с логином не должно быть пустым!';
+const ruleForPassword = (value: string) => !!value || 'Поле с паролем не должно быть пустым!'; 
 </script>
 
 <style lang="less">

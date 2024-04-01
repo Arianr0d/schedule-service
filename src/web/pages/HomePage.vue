@@ -11,6 +11,7 @@
 			:search="columnSearch"
 			item-value="disciplineName"
 			class="schedule-form__table"
+			aria-role="row"
 			@update:options="loadData"
 			@click:row="onClick"
 		>

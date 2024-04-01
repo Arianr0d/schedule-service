@@ -12,22 +12,30 @@
 						v-bind="props"
 						size="small"
 						class="schedule-form-header__icon"
+						aria-label="Данные пользователя"
+						role="button"
 						@click="openAboutUser = !openAboutUser"
 					/>
 				</template>
 
-				<v-card class="schedule-form-header__menu">
+				<v-card
+					class="schedule-form-header__menu"
+					role="menu"
+				>
 					<v-card
 						title="ФИО:"
 						:subtitle="user?.fullName"
+						role="menuitem"
 					/>
 					<v-card
 						title="Факультет:"
 						:subtitle="user?.facultyCode"
+						role="menuitem"
 					/>
 					<v-card
 						title="Кафедра:"
 						:subtitle="user?.chairName"
+						role="menuitem"
 					/>
 				</v-card>
 			</v-menu>
@@ -36,6 +44,8 @@
 				icon="mdi-account-arrow-right-outline"
 				size="small"
 				class="schedule-form-header__icon"
+				aria-label="Выход из аккаунта"
+				role="button"
 				@click="logout"
 			/>
 		</div>
@@ -44,9 +54,15 @@
 
 <script lang="ts" setup>
 import type { PropType } from 'vue';
-import { ref } from 'vue';
 import type { User } from '../types/user';
 
+import { ref } from 'vue';
+
+import { useUserStore } from '../stores/user';
+import { useRouter } from 'vue-router';
+
+const store = useUserStore();
+const router = useRouter();
 
 defineProps({
 	user: {
@@ -57,7 +73,11 @@ defineProps({
 
 const openAboutUser = ref(false);
 
-const logout = () => {};
+const logout = async () => {
+	await store.unset()
+
+	setTimeout(() => router.push({ path: '/login' }), 2000);
+};
 </script>
 
 <style lang="less">

@@ -9,7 +9,10 @@
 				<v-card-title class="requirement-dialog__title">
 					Требования к дисциплине
 
-					<span class="requirement-dialog__label">
+					<span
+						class="requirement-dialog__label"
+						aria-label="Наименование дисциплины"
+					>
 						{{ disciplineName }}
 					</span>
 				</v-card-title>
@@ -18,17 +21,20 @@
 					<v-select
 						v-model="selectedRequirementType"
 						:items="requirementsTypes"
+						:closable-chips="false"
 						item-title="name"
 						item-value="id"
 						density="compact"
 						label="Выберите подходящее требование"
 						return-object
+						aria-label="Тип требования"
 					/>
 
 					<v-textarea
 						v-model="requirementDescription"
 						label="Текст"
 						counter
+						aria-label="Описание требования"
 					/>
 				</div>
 
@@ -39,6 +45,8 @@
 						v-if="!!requirement.id"
 						color="red-darken-1"
 						variant="tonal"
+						aria-label="Удалить"
+						role="button"
 						@click="onDelete"
 					>
 						Удалить
@@ -47,6 +55,8 @@
 					<v-btn
 						color="green-darken-1"
 						variant="tonal"
+						aria-label="Отменить"
+						role="button"
 						@click="$emit('close')"
 					>
 						Отменить
@@ -55,6 +65,8 @@
 					<v-btn
 						color="grey-darken-1"
 						variant="elevated"
+						aria-label="Сохранить"
+						role="button"
 						@click="onSave"
 					>
 						Сохранить
