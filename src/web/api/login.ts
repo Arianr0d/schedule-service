@@ -10,15 +10,11 @@ export default async (login: string, password: string, url: string = 'http://loc
 			body: JSON.stringify({ login, password }),
 		});
 
-		const data = await response.json();
+		if (response === null) {
+			throw 'Error fetching';
+		}
 
-		return {
-			id: data.id,
-			fullName: data.fullName,
-			chairName: data.chairName,
-			facultyCode: data.facultyCode,
-			token: data.token,
-		};
+		return await response.json()
 	} catch (err) {
 		throw 'Error fetching';
 	}

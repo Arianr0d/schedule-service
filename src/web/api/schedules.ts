@@ -15,9 +15,7 @@ export default async (userId: number, sortBy: SortBy|null, search: Search, url: 
 			body: JSON.stringify({ userId, sortBy, search }),
 		});
 
-		const data = await response.json();
-
-		return data;
+		return await response.json()
 	} catch (err) {
 		throw 'Error fetching';
 	}

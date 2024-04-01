@@ -11,6 +11,7 @@ import {
 
 import AuthorizationPage from './pages/AuthorizationPage.vue';
 import HomePage from './pages/HomePage.vue';
+
 import vuetifyPlugin from './plugins/vuetify';
 
 const pinia = createPinia();
