@@ -1,9 +1,6 @@
-import {
-    Request,
-    Response
-} from "express"
+import type { Response } from 'express'
 
-export default (error: any, req: Request, res: Response) => {
+export default (error: any, res: Response) => {
     if (typeof (error) === 'string') {
         return res.status(400).json({ message: error });
     }

@@ -1,4 +1,6 @@
-import  type { Request, Response } from "express"
+import  type { Request, Response } from 'express'
+
+import errorHandlers from '../helpers/errorHandlers'
 
 import { PostgresDataSource } from '../ormconfig'
 
@@ -13,7 +15,7 @@ export default async (req: Request, res: Response) => {
 
     try {
         res.send(data)
-    } catch (err) {
-        throw 'Not found schedule for user'
+    } catch (error) {
+        throw errorHandlers(error, res)
     }
 }
